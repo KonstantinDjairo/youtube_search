@@ -2,7 +2,7 @@
 a simple program to search stuff on youtube without getting into it
 
 
-add both scripts to ~/.local/bin
+add both scripts to ~/.local/bin <br></br>
 bind ```youtube_search``` to a shortcut in your WM
 
 enjoy.
