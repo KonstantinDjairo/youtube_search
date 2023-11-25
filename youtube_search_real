@@ -1,0 +1,59 @@
+#!/usr/bin/python
+
+import sys
+import subprocess
+from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QLineEdit, QVBoxLayout
+from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QFont
+
+class YouTubeSearchApp(QWidget):
+    def __init__(self):
+        super().__init__()
+
+        self.init_ui()
+
+    def init_ui(self):
+        self.setWindowTitle('YouTube 検索')
+        self.setFixedSize(300, 100)
+
+        # Apply a dark theme
+        self.setStyleSheet("background-color: black; color: white;")
+
+        self.label = QLabel('YouTube で検索するテキストを入力してください:', self)
+        self.query_input = QLineEdit(self)
+        
+        # Set the font size of the input box
+        font = QFont()
+        font.setPointSize(14)
+        self.query_input.setFont(font)
+
+        self.query_input.setStyleSheet("background-color: gray; color: black;")  # Adjust input box style
+
+        # Create layout
+        main_layout = QVBoxLayout(self)
+        main_layout.addWidget(self.label)
+        main_layout.addWidget(self.query_input)
+        main_layout.setAlignment(Qt.AlignBottom)
+
+        # Connect the Enter and Esc key press events to the close function
+        self.query_input.returnPressed.connect(self.close_app)
+        self.query_input.setContextMenuPolicy(Qt.NoContextMenu)  # Disable context menu (right-click menu)
+
+    def close_app(self):
+        query = self.query_input.text()
+        if query:
+            search_link = f"https://youtube.owacon.moe/results?search_query={query.replace(' ', '+')}"
+            subprocess.run(["firefox", search_link])
+        self.close()
+
+    def keyPressEvent(self, event):
+        # Override the key press event to close the application on Esc key press
+        if event.key() == Qt.Key_Escape:
+            self.close()
+
+if __name__ == '__main__':
+    app = QApplication(sys.argv)
+    app.setStyle("Fusion")  # Use Fusion style for a consistent look across platforms
+    window = YouTubeSearchApp()
+    window.show()
+    sys.exit(app.exec_())
